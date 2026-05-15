@@ -1,0 +1,8 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "dependencies": {
+    "core": "workspace:*",
+    "hono": "^4.12.0"
+  }
+}

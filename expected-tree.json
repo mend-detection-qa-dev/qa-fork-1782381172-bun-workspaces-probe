@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "pm": "bun",
+  "pm_version_tested": "1.2.0",
+  "source_file": "bun.lock",
+  "generated_at": "2026-05-15T00:00:00+00:00",
+  "root": {
+    "name": "bun-workspaces-probe",
+    "version": "0.1.0",
+    "dependencies": [
+      "core",
+      "web"
+    ]
+  },
+  "packages": {
+    "core": {
+      "version": "0.1.0",
+      "source": "local",
+      "group": "main",
+      "editable": true,
+      "dependencies": [
+        "zod"
+      ],
+      "source_detail": {
+        "path": "packages/core"
+      }
+    },
+    "web": {
+      "version": "0.1.0",
+      "source": "local",
+      "group": "main",
+      "editable": true,
+      "dependencies": [
+        "core",
+        "hono"
+      ],
+      "source_detail": {
+        "path": "packages/web"
+      }
+    },
+    "zod": {
+      "version": "3.25.68",
+      "source": "registry",
+      "group": "main",
+      "dependencies": [],
+      "source_detail": {
+        "registry": "https://registry.npmjs.org"
+      }
+    },
+    "hono": {
+      "version": "4.12.18",
+      "source": "registry",
+      "group": "main",
+      "dependencies": [],
+      "source_detail": {
+        "registry": "https://registry.npmjs.org"
+      }
+    }
+  },
+  "dependency_counts": {
+    "direct": 4,
+    "transitive": 0,
+    "total": 4,
+    "notes": [
+      "Direct deps: root -> core (workspace/local), root -> web (workspace/local), core -> zod (registry), web -> hono (registry). The web -> core edge is workspace:* — encoded as local/editable.",
+      "No transitive deps: hono and zod have zero runtime dependencies, so there are no nodes beyond direct edges.",
+      "Mend may scan each workspace member as a sub-project and report per-member trees in addition to or instead of the unified root tree. If Mend reports separate sub-trees, core should show 1 direct (zod) and web should show 2 directs (core as local, hono as registry)."
+    ]
+  },
+  "workspace_edges": [
+    {
+      "from": "web",
+      "to": "core",
+      "protocol": "workspace:*",
+      "source": "local",
+      "editable": true
+    }
+  ],
+  "project_metadata": {
+    "source_file": "bun.lock",
+    "groups": [
+      "main"
+    ],
+    "workspace_members": [
+      "packages/core",
+      "packages/web"
+    ]
+  },
+  "warnings": [
+    "Bun is NOT a UA-supported resolver. There is no 'bun' entry in Mend's install-tool list — scanSettings.versioning cannot pin a Bun toolchain. Detection relies entirely on static bun.lock parsing.",
+    "workspace:* cross-reference (web -> core): Mend must resolve this to source='local' using the workspaces section of bun.lock, NOT as an npm registry lookup. If Mend emits source='registry' for core, or reports a 404 / ghost dependency, that is the workspace:* protocol failure documented in BUN_COVERAGE_PLAN.md §4.",
+    "The bun.lock packages section intentionally omits 'core' — local workspace members are NOT listed in the packages object. A Mend parser that expects all deps to appear in packages will silently drop 'core' from the web sub-tree. That is a false negative.",
+    "Mend may report workspace members as separate projects (sub-scans) rather than as nodes in a unified root tree. Either behavior is acceptable; the comparator should tolerate both representations. The workspace_edges array above encodes the expected cross-reference regardless of representation.",
+    "If Mend falls back to npm ls or filesystem scan (because bun.lock is not recognized), the workspace: protocol will not be understood and the web -> core edge will be dropped. Expected tree encodes the correct resolved graph; comparator should flag any dropped edge."
+  ]
+}
